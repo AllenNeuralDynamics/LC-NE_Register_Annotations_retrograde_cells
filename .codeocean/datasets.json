@@ -1,0 +1,13 @@
+{
+	"version": 1,
+	"attached_datasets": [
+		{
+			"id": "9be4e3ac-adfb-4335-824c-bd99364a2c0f",
+			"mount": "lightsheet_template_ccf_registration"
+		},
+		{
+			"id": "bb4a30be-7b42-4e20-818b-63253a373bb1",
+			"mount": "SmartSPIM_746045_2024-09-27_12-31-24_stitched_2024-09-29_11-04-08"
+		}
+	]
+}
