@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install libgl1 -y
 RUN apt-get install libxrender1
 
 RUN pip install -U --no-cache-dir \
-    numpy==1.24.0 \
     dask[distributed]==2022.11.1 \
     scikit-learn==1.5.1 \
     imlib==0.1.3 \
@@ -27,4 +26,11 @@ RUN pip install -U --no-cache-dir \
     neuroglancer==2.36 \
     boto3==1.26.112 \
     vedo==2023.4.6 \
-    aind-data-schema==0.22.1
+    aind-data-schema==0.22.1\
+    notebook \
+    numpy==1.24.0 
+
+
+
+RUN conda install -c conda-forge k3d
+RUN conda install pandas

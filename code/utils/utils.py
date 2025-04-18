@@ -6,6 +6,7 @@ import pims
 import vedo
 import numpy as np
 import pandas as pd
+import xmltodict
 import dask.array as da
 import matplotlib.pyplot as plt
 
@@ -17,68 +18,186 @@ from imlib.cells.cells import Cell
 from imlib.IO.cells import get_cells, save_cells
 
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 
 PathLike = Union[Path, str]
 
-
-def read_xml(
-    seg_path: PathLike, reg_dims: list, ds: int, orient: str, institute: str
-) -> list:
+def read_json_as_dict(filepath: str) -> dict:
     """
-    Imports cell locations from segmentation output
+    Reads a json as dictionary.
+    Parameters
+    ------------------------
+    filepath: PathLike
+        Path where the json is located.
+    Returns
+    ------------------------
+    dict:
+        Dictionary with the data the json has.
+    """
+
+    dictionary = {}
+
+    if os.path.exists(filepath):
+        with open(filepath) as json_file:
+            dictionary = json.load(json_file)
+
+    return dictionary
+
+def read_cells_from_xml(
+    cell_likelihoods_path: Union[str, "PathLike"],
+    reg_dims: List[int],
+    ds: int,
+    orient: str,
+    orient_matrix: np.ndarray,
+    institute: str,
+) -> List[tuple]:
+    """
+    Imports cell locations from a XML file of cell likelihoods.
 
     Parameters
     -------------
-    seg_path: PathLike
-        Path where the .xml file is located
+    cell_likelihoods_path: str or PathLike
+        Path to the cell likelihoods XML file.
     reg_dims: list
-        Resolution (pixels) of the image used for segmentation. Orientation [ML, DV, AP]
+        Resolution (pixels) of the image used for segmentation, ordered relative to zarr.
     ds: int
-        factor by which image for registration was downsampled from input_dims
+        Factor by which the image for registration was downsampled from input_dims.
     orient: str
-        the orientation the brain was imaged
-    insititute: str
-        the institution that imaged the dataset
+        The orientation the brain was imaged.
+    orient_matrix: np.ndarray
+        The direction of the axis of input cells relative to registration
+    institute: str
+        The institution that imaged the dataset.
 
     Returns
     -------------
-    list
-        List with cell locations as tuples [ML, DV, AP]
+    np.ndarray
+        Array with cell locations scaled and oriented
     """
+    if not Path(cell_likelihoods_path).exists():
+        raise FileNotFoundError(f"Path {cell_likelihoods_path} does not exist.")
 
-    cell_file = glob(os.path.join(seg_path, "*.xml"))[0]
-    file_cells = get_cells(cell_file)
+    cells_list = get_points_from_xml(cell_likelihoods_path)
 
     cells = []
 
-    for cell in file_cells:
-        if orient == "spr":
-            cells.append((cell.x / ds, cell.z / ds, reg_dims[2] - (cell.y / ds)))
-        elif orient == "spl" and institute == "AIBS":
-            cells.append(
-                (reg_dims[0] - (cell.x / ds), cell.z / ds, reg_dims[2] - (cell.y / ds))
+    for row in cells_list:
+        
+        x, y, z = int(row["x"]), int(row["y"]), int(row["z"])
+    
+        # Corrects for a bug in acquisition as SPL is not an actual imaging orientation
+        if orient == "spl" and institute == "AIBS":
+            y = reg_dims[1] - (y / ds)
+        else:
+            y = y / ds
+    
+        cells.append(
+                (z / ds, y, x / ds)
             )
-        elif orient == "spl" and institute == "AIND":
-            cells.append(
-                (
-                    cell.z / ds, 
-                    cell.y / ds,
-                    cell.x / ds
-                )
-            )
-        elif orient == "sal":
-            cells.append((cell.x / ds, cell.z / ds, cell.y / ds))
-        elif orient == "rpi":
-            cells.append(
-                (
-                    cell.z / ds, #reg_dims[0] - (cell.z / ds),
-                    reg_dims[1] - (cell.y / ds),
-                    reg_dims[2] - (cell.x / ds),                
-                )
-            )
+    
+    cells = np.array(cells)
+    print(f"Cell Max: {np.max(cells, axis = 0)}")
+    
+    for idx, dim_orient in enumerate(orient_matrix.sum(axis = 1)):
+        if dim_orient < 0:
+            cells[:, idx] = reg_dims[idx] - cells[:, idx]
+    
+    print(f"Cell Max: {np.max(cells, axis = 0)}")
+                              
+    return cells
+
+def read_cells_from_csv(
+    cell_likelihoods_path: Union[str, "PathLike"],
+    reg_dims: List[int],
+    ds: int,
+    orient: str,
+    orient_matrix: np.ndarray,
+    institute: str,
+) -> List[tuple]:
+    """
+    Imports cell locations from a CSV file of cell likelihoods.
+
+    Parameters
+    -------------
+    cell_likelihoods_path: str or PathLike
+        Path to the cell likelihoods CSV file.
+    reg_dims: list
+        Resolution (pixels) of the image used for segmentation, ordered relative to zarr.
+    ds: int
+        Factor by which the image for registration was downsampled from input_dims.
+    orient: str
+        The orientation the brain was imaged.
+    orient_matrix: np.ndarray
+        The direction of the axis of input cells relative to registration
+    institute: str
+        The institution that imaged the dataset.
+
+    Returns
+    -------------
+    np.ndarray
+        Array with cell locations scaled and oriented
+    """
+    if not Path(cell_likelihoods_path).exists():
+        raise FileNotFoundError(f"Path {cell_likelihoods_path} does not exist.")
+
+    df = pd.read_csv(cell_likelihoods_path)
+
+    cells = []
+
+    for _, row in df.iterrows():
+        x, y, z = row["X"], row["Y"], row["Z"]
+
+        # Corrects for a bug in acquisition as SPL is not an actual imaging orientation
+        if orient == "spl" and institute == "AIBS":
+            y = reg_dims[1] - (y / ds)
+        else:
+            y = y / ds
+
+        cells.append((z / ds, y, x / ds))
+
+    cells = np.array(cells)
+
+    for idx, dim_orient in enumerate(orient_matrix.sum(axis=1)):
+        if dim_orient < 0:
+            cells[:, idx] = reg_dims[idx] - cells[:, idx]
 
     return cells
+
+def get_points_from_xml(path: PathLike, encoding: str = "utf-8") -> List[dict]:
+    """
+    Function to parse the points from the
+    cell segmentation capsule.
+
+    Parameters
+    -----------------
+
+    Path: PathLike
+        Path where the XML is stored.
+
+    encoding: str
+        XML encoding. Default: "utf-8"
+
+    Returns
+    -----------------
+    List[dict]
+        List with the location of the points.
+    """
+
+    with open(path, "r", encoding=encoding) as xml_reader:
+        xml_file = xml_reader.read()
+
+    xml_dict = xmltodict.parse(xml_file)
+    cell_data = xml_dict["CellCounter_Marker_File"]["Marker_Data"][
+        "Marker_Type"
+    ]["Marker"]
+
+    new_cell_data = []
+    for cell in cell_data:
+        new_cell_data.append(
+            {"x": cell["MarkerX"], "y": cell["MarkerY"], "z": cell["MarkerZ"],}
+        )
+
+    return new_cell_data
 
 def check_orientation(img: np.array, params: dict, orientations: dict):
     """
@@ -135,6 +254,35 @@ def check_orientation(img: np.array, params: dict, orientations: dict):
             out_mat[val, val] *= -1
 
     return img_out, orient_mat, out_mat
+
+def get_orientation(params: dict) -> str:
+    """
+    Fetch aquisition orientation to identify origin for cell locations
+    from cellfinder. Important for read_xml function in quantification
+    script
+
+    Parameters
+    ----------
+    params : dict
+        The orientation information from processing_manifest.json
+
+    Returns
+    -------
+    orient : str
+        string that indicates axes order and direction current available
+        options are:
+            'spr'
+            'sal'
+        But more may be used later
+    """
+
+    orient = ["", "", ""]
+    for vals in params:
+        direction = vals["direction"].lower()
+        dim = vals["dimension"]
+        orient[dim] = direction[0]
+
+    return "".join(orient)
 
 
 def get_orientation_transform(orientation_in: str, orientation_out: str) -> tuple:
@@ -298,7 +446,7 @@ def read_template_to_ccf_tramsform(reg_path: PathLike, reverse = False) -> tuple
     if reverse:
         warp_file = os.path.abspath(os.path.join(reg_path, "spim_template_to_ccf_syn_1Warp.nii.gz"))       
     else:
-        warp_file = os.path.abspath(os.path.join(reg_path, "spim_template_to_ccf_syn_1InverseWarp.nii.gz"))
+        warp_file = os.path.abspath(os.path.join(reg_path, "syn_1InverseWarp.nii.gz"))
     
     transforms = [
         warp_file,
@@ -645,9 +793,11 @@ def normalized_mutual_information(
 def transform_cells(params):       
     """
     Takes cells and registers them to the CCF using the transforms from registration
-    """  
+    """
+    
+    img_path = f"{params['data_path']}/image_tile_fusing/OMEZarr/{params['channel']}.zarr"
       
-    input_array = da.from_zarr(params['s3_path'], params['input_level']).squeeze()
+    input_array = da.from_zarr(img_path, params['input_level']).squeeze()
     input_res = input_array.shape
     
     ds = 2**params['register_level']
@@ -656,7 +806,7 @@ def transform_cells(params):
     print(reg_dims)
     
     raw_cells = read_xml(
-        params['cells_xml_path'], reg_dims, ds, params['orient'], params['institute_abbreviation']
+        params['cells_path'], reg_dims, ds, params['orient'].lower(), params['institute_abbreviation']
     )
     
     _, swapped, mat = get_orientation_transform(params['orient'], 'ras')
@@ -671,14 +821,20 @@ def transform_cells(params):
     orient_cells = np.array(scaled_cells)[:, swapped]
     
     #Transform to template
-    transforms = read_ls_to_template_transform(params['template_transform_path'], reverse = False)
+    if os.path.exists(f"{params['data_path']}/image_atlas_alignment/Ex_639_Em_660"):
+        ls_transform_path = f"{params['data_path']}/image_atlas_alignment/Ex_639_Em_660"
+    else:
+        ls_transform_path = f"{params['data_path']}/image_atlas_alignment/Ex_639_Em_667"
+    # ls_transform_path = f"{params['data_path']}/image_atlas_alignment/{params['reg_channel']}"
+    
+    transforms = read_ls_to_template_transform(ls_transform_path, reverse = False)
     template_params = get_template_info('../data/lightsheet_template_ccf_registration/smartspim_lca_template_25.nii.gz')
     ants_pts = convert_to_ants_space(template_params, orient_cells)
     template_pts = apply_transforms_to_points(ants_pts, transforms, invert = (False, True))
     
-    out1 = convert_from_ants_space(template_params, template_pts)
+    template_cells = convert_from_ants_space(template_params, template_pts)
     
-    transforms = read_template_to_ccf_tramsform(ccf_transforms_path, reverse = False)
+    transforms = read_template_to_ccf_tramsform(params['transforms_path'], reverse = False)
     ccf_params = get_template_info('../data/lightsheet_template_ccf_registration/ccf_average_template_25.nii.gz')
     ccf_pts = apply_transforms_to_points(template_pts, transforms, invert = (False, True))
     out = convert_from_ants_space(ccf_params, ccf_pts)
@@ -686,7 +842,7 @@ def transform_cells(params):
     _, swapped, _ = get_orientation_transform('RAS', 'ASL')
     ccf_cells = out[:, swapped]
 
-    return ccf_cells
+    return template_cells, ccf_cells
     
     
 

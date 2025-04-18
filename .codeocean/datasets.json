@@ -2,12 +2,36 @@
 	"version": 1,
 	"attached_datasets": [
 		{
+			"id": "1371edb3-2bc4-40df-848a-24feed3898c0",
+			"mount": "SmartSPIM_751017_2024-11-14_19-17-29_stitched_2024-11-16_05-13-56"
+		},
+		{
+			"id": "1a1d1d36-bb09-48cc-9d9b-3272b668d6d2",
+			"mount": "SmartSPIM_755069_2024-11-13_18-14-30_stitched_2024-11-16_01-54-40"
+		},
+		{
+			"id": "50c5c318-33cf-48db-b0cb-9a709d445011",
+			"mount": "SmartSPIM_762196_2024-11-26_02-58-49_stitched_2025-01-03_05-42-02"
+		},
+		{
+			"id": "95f410f9-00a6-4881-a7e7-22d5730d6f76",
+			"mount": "SmartSPIM_762199_2024-12-18_15-41-02_stitched_2024-12-20_17-48-31"
+		},
+		{
 			"id": "9be4e3ac-adfb-4335-824c-bd99364a2c0f",
 			"mount": "lightsheet_template_ccf_registration"
 		},
 		{
-			"id": "bb4a30be-7b42-4e20-818b-63253a373bb1",
-			"mount": "SmartSPIM_746045_2024-09-27_12-31-24_stitched_2024-09-29_11-04-08"
+			"id": "c4000623-deb8-4a7d-9b2e-9acc62278ad9",
+			"mount": "SmartSPIM_755073_2024-11-15_03-16-39_stitched_2024-12-03_11-15-46"
+		},
+		{
+			"id": "de8bc955-35df-4001-a374-d9017abe012a",
+			"mount": "SmartSPIM_755072_2024-11-13_21-29-44_stitched_2024-11-16_03-19-42"
+		},
+		{
+			"id": "e2f72d52-96e3-4e39-9779-8d99c43bdd51",
+			"mount": "SmartSPIM_751019_2024-11-07_18-39-55_stitched_2024-11-28_12-46-07"
 		}
 	]
 }
