@@ -2,6 +2,10 @@
 	"version": 1,
 	"attached_datasets": [
 		{
+			"id": "044cd0e8-0fbc-42aa-b139-4eba48bbcff9",
+			"mount": "SmartSPIM_751035_2024-10-14_22-59-51_stitched_2024-10-17_04-08-04"
+		},
+		{
 			"id": "1371edb3-2bc4-40df-848a-24feed3898c0",
 			"mount": "SmartSPIM_751017_2024-11-14_19-17-29_stitched_2024-11-16_05-13-56"
 		},
@@ -10,20 +14,60 @@
 			"mount": "SmartSPIM_755069_2024-11-13_18-14-30_stitched_2024-11-16_01-54-40"
 		},
 		{
+			"id": "39250f95-64be-454f-af8f-cb5d4d4f76f9",
+			"mount": "SmartSPIM_744119_2024-09-13_19-19-38_stitched_2024-10-04_07-01-37"
+		},
+		{
 			"id": "50c5c318-33cf-48db-b0cb-9a709d445011",
 			"mount": "SmartSPIM_762196_2024-11-26_02-58-49_stitched_2025-01-03_05-42-02"
+		},
+		{
+			"id": "65766b04-623a-4ae1-8f34-811a85b72158",
+			"mount": "SmartSPIM_746041_2024-09-19_13-18-06_stitched_2024-10-04_08-24-44"
+		},
+		{
+			"id": "80a6e0a5-a2d6-4e1c-9af4-628d4452a5ae",
+			"mount": "SmartSPIM_725231_2024-07-26_15-59-18_stitched_2024-07-29_08-46-42"
 		},
 		{
 			"id": "95f410f9-00a6-4881-a7e7-22d5730d6f76",
 			"mount": "SmartSPIM_762199_2024-12-18_15-41-02_stitched_2024-12-20_17-48-31"
 		},
 		{
+			"id": "97207cc5-a980-4da1-a5cb-2f9b6e871f5c",
+			"mount": "SmartSPIM_751023_2024-10-15_17-03-49_stitched_2024-10-18_09-37-08"
+		},
+		{
 			"id": "9be4e3ac-adfb-4335-824c-bd99364a2c0f",
 			"mount": "lightsheet_template_ccf_registration"
 		},
 		{
+			"id": "a5d98479-ca05-45e8-a15e-5008c6a02392",
+			"mount": "SmartSPIM_746046_2024-09-26_22-22-35_stitched_2024-09-28_22-26-50"
+		},
+		{
+			"id": "ab2d41b9-fed0-4c16-a2a7-6e814fd490b5",
+			"mount": "SmartSPIM_744117_2024-09-13_16-13-13_stitched_2024-10-04_08-12-37"
+		},
+		{
+			"id": "b464f0c1-2eef-4e87-a9ce-95268d314256",
+			"mount": "SmartSPIM_746043_2024-09-19_16-27-14_stitched_2024-10-04_21-26-25"
+		},
+		{
+			"id": "bb4a30be-7b42-4e20-818b-63253a373bb1",
+			"mount": "SmartSPIM_746045_2024-09-27_12-31-24_stitched_2024-09-29_11-04-08"
+		},
+		{
+			"id": "bd2502e2-602d-4cba-ac67-3866aa6e0162",
+			"mount": "SmartSPIM_731907_2024-07-26_12-50-16_stitched_2024-08-09_15-13-07"
+		},
+		{
 			"id": "c4000623-deb8-4a7d-9b2e-9acc62278ad9",
 			"mount": "SmartSPIM_755073_2024-11-15_03-16-39_stitched_2024-12-03_11-15-46"
+		},
+		{
+			"id": "d46d7bd1-42cc-4af0-a437-ab1ba6652cf5",
+			"mount": "SmartSPIM_751024_2024-10-14_15-03-44_stitched_2024-10-16_18-55-21"
 		},
 		{
 			"id": "de8bc955-35df-4001-a374-d9017abe012a",

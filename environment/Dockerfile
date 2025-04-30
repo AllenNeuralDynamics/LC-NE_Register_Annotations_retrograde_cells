@@ -28,6 +28,7 @@ RUN pip install -U --no-cache-dir \
     vedo==2023.4.6 \
     aind-data-schema==0.22.1\
     notebook \
+    point-cloud-utils \
     numpy==1.24.0 
 
 
