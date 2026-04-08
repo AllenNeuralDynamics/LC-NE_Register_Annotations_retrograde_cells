@@ -31,7 +31,8 @@ RUN pip install -U --no-cache-dir \
     point-cloud-utils \
     numpy==1.24.0 
 
-
+# Realign pyopenssl with the cryptography version pulled in above
+RUN pip install "pyopenssl==23.2.0" "cryptography==41.0.7"
 
 RUN conda install -c conda-forge k3d
 RUN conda install pandas
