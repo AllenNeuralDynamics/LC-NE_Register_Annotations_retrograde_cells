@@ -74,10 +74,6 @@
 			"mount": "SmartSPIM_751023_2024-10-15_17-03-49_stitched_2024-10-18_09-37-08"
 		},
 		{
-			"id": "9be4e3ac-adfb-4335-824c-bd99364a2c0f",
-			"mount": "lightsheet_template_ccf_registration"
-		},
-		{
 			"id": "9dd66d43-53d1-4bf7-a7fd-bdc3024c4128",
 			"mount": "SmartSPIM_762196_2024-11-26_02-58-49_stitched_2025-10-14_12-31-07"
 		},
@@ -92,6 +88,10 @@
 		{
 			"id": "ab2d41b9-fed0-4c16-a2a7-6e814fd490b5",
 			"mount": "SmartSPIM_744117_2024-09-13_16-13-13_stitched_2024-10-04_08-12-37"
+		},
+		{
+			"id": "b1977b1f-9034-4f82-9e8b-80904158fed2",
+			"mount": "SmartSPIM-template_2024-05-16_11-26-14"
 		},
 		{
 			"id": "b3b4bd53-c18b-4bc3-a7be-d7f2c5dd2662",

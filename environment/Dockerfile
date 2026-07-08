@@ -1,6 +1,6 @@
 # hash:sha256:6ceefde681fb5ad2ca41bca5b1ebdfc35ce9ce0f7acc50dc183706cc463f5d61
 ARG REGISTRY_HOST
-FROM $REGISTRY_HOST/codeocean/jupyterlab:3.6.1-miniconda4.12.0-python3.9-ubuntu20.04
+FROM $REGISTRY_HOST/codeocean/mambaforge3:24.5.0-0-python3.12.4-ubuntu22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -20,19 +20,21 @@ RUN pip install -U --no-cache-dir \
     tqdm==4.65.0 \
     antspyx \
     argschema==3.0.4 \
-    ray==2.9.0 \
+    ray==2.31.0 \
     pims==0.6.1 \
     xmltodict==0.13.0 \
-    neuroglancer==2.36 \
     boto3==1.26.112 \
     vedo==2023.4.6 \
-    aind-data-schema==0.22.1\
     notebook \
     point-cloud-utils \
-    numpy==1.24.0 
+    aind-data-schema==2.8.0 \
+    aind-data-access-api==1.10.0
+#neuroglancer==2.36 \
 
 # Realign pyopenssl with the cryptography version pulled in above
 RUN pip install "pyopenssl==23.2.0" "cryptography==41.0.7"
 
-RUN conda install -c conda-forge k3d
-RUN conda install pandas
+RUN conda install -c conda-forge k3d pandas && \
+    pip install --no-cache-dir numpy==1.26.0
+
+#force rebuild
