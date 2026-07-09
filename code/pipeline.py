@@ -22,7 +22,7 @@ from aind_data_access_api.document_db import MetadataDbClient
 params = {
     # data collection
     'data_folder': '../data',
-    'annotation_folder': 'annotations',
+    'annotation_folder': 'LC-NE-manual-annotations_2026-07-09_00-03-36',
     'tp_name': 'PK_LC_all_annotations',
     'json_path': '../results/jsons',
     'csv_path': '../results/raw_space',
