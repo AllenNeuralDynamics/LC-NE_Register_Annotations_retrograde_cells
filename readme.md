@@ -9,7 +9,7 @@ Code Ocean capsule for extracting manually curated cell annotations from a neuro
 
 ## 1. Pipeline overview
 
-This capsule runs a single script 'pipeline.py' (see [run](run)) that identifies which point annotations from a nuroglancer JSON exist with in the Pons, using a signed distance algorithm. The points are then registered into CCF space and tagged as whether they are inside, outside, or boardering the Pons. Outputs from this script are written to '/results/:
+This capsule runs a single script 'pipeline.py' (see [run](run)) that identifies which point annotations from a nuroglancer JSON exist with in the Pons, using a signed distance algorithm. The points are then registered into CCF space and tagged as whether they are inside, outside, or bordering the Pons. Outputs from this script are written to '/results/:
 
 the reproducible run is driven by [run](run):
 
@@ -39,7 +39,7 @@ python -u pipeline.py
 - Per-Brain CSVs that include Pons localization information include a 'Location' column. 
     - inside: cells that are located within the Pons identified using signed distance
     - outside: cells that are located outside the Pons identified using signed distance
-    - boarder: cells that are not located within the Pons identified using signed distance, but are within a thresheld radius from the regions boundary (see pipeline.py params)
+    - border: cells that are not located within the Pons identified using signed distance, but are within a thresheld radius from the regions boundary (see pipeline.py params)
 
 ### Environment
 Python environment.
