@@ -31,6 +31,7 @@ python -u pipeline.py
 - 'registered/': folder containing annotations taken from the manually annotated layer of the neuroglancer JSON registered into CCF space and saved to a CSV. Each dataset has its own file {LabTracks_ID}_ccf.csv
 - 'raw_space/': folder containing annotations taken from the manually annotated layer of the neuroglancer JSON in raw imaging space with identification of location relative to the Pons CCF mesh (inside, outside, bordering)
 - 'final_results/': folder containing annotations taken from the manually annotated layer of the neuroglancer JSON in CCF space with identification of location relative to the Pons CCF mesh
+- **NOTE** in the output data asset "border" is misspelled as "boarder", which should be accounted for if using that as filtering criterion for data selection
 
 ## 4. Coordinate conventions
 
