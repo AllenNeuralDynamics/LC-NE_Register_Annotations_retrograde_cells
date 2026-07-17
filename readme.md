@@ -5,6 +5,8 @@ Code Ocean capsule for extracting manually curated cell annotations from a neuro
 **GitHub:** https://github.com/AllenNeuralDynamics/LC-NE_Register_Annotations_retrograde_cells
 **Code Ocean:** https://codeocean.allenneuraldynamics.org/capsule/1936843
 
+**Manuscript:** https://www.biorxiv.org/content/10.64898/2026.04.10.717727v1.full.pdf
+
 ---
 
 ## 1. Pipeline overview
