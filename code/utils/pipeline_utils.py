@@ -3,6 +3,7 @@ import json
 import pickle
 from utils import utils
 
+import vedo
 import numpy as np
 
 def orient_mesh(

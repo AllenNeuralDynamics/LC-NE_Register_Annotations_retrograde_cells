@@ -805,11 +805,11 @@ def transform_cells(params):
     
     print(reg_dims)
     
-    raw_cells = read_xml(
-        params['cells_path'], reg_dims, ds, params['orient'].lower(), params['institute_abbreviation']
-    )
-    
     _, swapped, mat = get_orientation_transform(params['orient'], 'ras')
+
+    raw_cells = read_cells_from_xml(
+        params['cells_path'], reg_dims, ds, params['orient'].lower(), mat, params['institute_abbreviation']
+    )
     
     if params['orient'].lower() == 'rpi':
         scale = [14.4/25, 14.4/25, 16/25]

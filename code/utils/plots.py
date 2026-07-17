@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from skimage import measure
+
 def get_plot_planes(mask, split):
     
     if split == "hemi":
